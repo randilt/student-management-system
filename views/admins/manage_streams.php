@@ -30,8 +30,8 @@
               <div class="card">
                   <div class="card-header d-flex justify-content-between align-items-center">
                       <h3 class="card-title"><?php echo $stream->name; ?></h3>
-                      <div>
-                          <a href="<?php echo URL_ROOT; ?>/admins/editStream/<?php echo $stream->id; ?>" class="btn btn-sm btn-outline-primary">Edit</a>
+                      <div class="action-btns">
+                          <a href="<?php echo URL_ROOT; ?>/admins/editStream/<?php echo $stream->id; ?>" class="edit-btn">Edit</a>
                           <form action="<?php echo URL_ROOT; ?>/admins/deleteStream" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this stream? This will also delete all subjects in this stream.');">
                               <input type="hidden" name="stream_id" value="<?php echo $stream->id; ?>">
                               <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>

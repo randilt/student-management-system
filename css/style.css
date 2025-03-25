@@ -977,3 +977,13 @@ textarea.form-control {
   display: flex;
   gap: 10px;
 }
+
+.edit-btn {
+  background-color: #2f4858;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 5px;
+  direction: none;
+  text-decoration: none;
+}
