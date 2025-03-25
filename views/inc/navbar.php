@@ -19,7 +19,7 @@
                         <li>
                             <a class="nav-link" href="<?php echo URL_ROOT; ?>/students/dashboard">Dashboard</a>
                         </li>
-                    <?php elseif($_SESSION['user_role'] == 'principal' || $_SESSION['user_role'] == 'stream_head') : ?>
+                    <?php elseif($_SESSION['user_role'] == 'principal' || $_SESSION['user_role'] == 'stream_head' || $_SESSION['user_role'] == 'administrator') : ?>
                         <li>
                             <a class="nav-link" href="<?php echo URL_ROOT; ?>/admins/dashboard">Dashboard</a>
                         </li>

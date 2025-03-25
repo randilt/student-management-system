@@ -266,6 +266,10 @@ class Users {
             header('location: ' . URL_ROOT . '/admins/dashboard');
         } elseif($user->role == 'stream_head') {
             header('location: ' . URL_ROOT . '/admins/dashboard');
+        }elseif($user->role == 'administrator') {
+            header('location: ' . URL_ROOT . '/admins/dashboard');
+        } else {
+            die('Something went wrong');
         }
     }
 

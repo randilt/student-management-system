@@ -1,213 +1,255 @@
 <?php
 class User {
-    private $db;
+  private $db;
 
-    public function __construct() {
-        $this->db = new Database;
-    }
+  public function __construct() {
+      $this->db = new Database;
+  }
 
-    // Register user
-    public function register($data) {
-        // Hash password
-        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+  // Register user
+  public function register($data) {
+      // Hash password
+      $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-        // Begin transaction
-        $this->db->beginTransaction();
+      // Begin transaction
+      $this->db->beginTransaction();
 
-        try {
-            // Insert user
-            $this->db->query('INSERT INTO users (username, password, email, role) VALUES (:username, :password, :email, :role)');
-            $this->db->bind(':username', $data['username']);
-            $this->db->bind(':password', $data['password']);
-            $this->db->bind(':email', $data['email']);
-            $this->db->bind(':role', 'student'); // Default role for registration
-            
-            $this->db->execute();
-            $userId = $this->db->lastInsertId();
+      try {
+          // Insert user
+          $this->db->query('INSERT INTO users (username, password, email, role) VALUES (:username, :password, :email, :role)');
+          $this->db->bind(':username', $data['username']);
+          $this->db->bind(':password', $data['password']);
+          $this->db->bind(':email', $data['email']);
+          $this->db->bind(':role', 'student'); // Default role for registration
+          
+          $this->db->execute();
+          $userId = $this->db->lastInsertId();
 
-            // Insert student profile
-            $this->db->query('INSERT INTO students (user_id, first_name, last_name, date_of_birth, gender, address, contact_number, parent_name, parent_contact) 
-                            VALUES (:user_id, :first_name, :last_name, :date_of_birth, :gender, :address, :contact_number, :parent_name, :parent_contact)');
-            
-            $this->db->bind(':user_id', $userId);
-            $this->db->bind(':first_name', $data['first_name']);
-            $this->db->bind(':last_name', $data['last_name']);
-            $this->db->bind(':date_of_birth', $data['date_of_birth']);
-            $this->db->bind(':gender', $data['gender']);
-            $this->db->bind(':address', $data['address']);
-            $this->db->bind(':contact_number', $data['contact_number']);
-            $this->db->bind(':parent_name', $data['parent_name']);
-            $this->db->bind(':parent_contact', $data['parent_contact']);
-            
-            $this->db->execute();
-            $studentId = $this->db->lastInsertId();
+          // Insert student profile
+          $this->db->query('INSERT INTO students (user_id, first_name, last_name, date_of_birth, gender, address, contact_number, parent_name, parent_contact) 
+                          VALUES (:user_id, :first_name, :last_name, :date_of_birth, :gender, :address, :contact_number, :parent_name, :parent_contact)');
+          
+          $this->db->bind(':user_id', $userId);
+          $this->db->bind(':first_name', $data['first_name']);
+          $this->db->bind(':last_name', $data['last_name']);
+          $this->db->bind(':date_of_birth', $data['date_of_birth']);
+          $this->db->bind(':gender', $data['gender']);
+          $this->db->bind(':address', $data['address']);
+          $this->db->bind(':contact_number', $data['contact_number']);
+          $this->db->bind(':parent_name', $data['parent_name']);
+          $this->db->bind(':parent_contact', $data['parent_contact']);
+          
+          $this->db->execute();
+          $studentId = $this->db->lastInsertId();
 
-            // Insert O/L results
-            foreach($data['ol_results'] as $subject => $grade) {
-                $this->db->query('INSERT INTO ol_results (student_id, subject, grade) VALUES (:student_id, :subject, :grade)');
-                $this->db->bind(':student_id', $studentId);
-                $this->db->bind(':subject', $subject);
-                $this->db->bind(':grade', $grade);
-                $this->db->execute();
-            }
+          // Insert O/L results
+          foreach($data['ol_results'] as $subject => $grade) {
+              $this->db->query('INSERT INTO ol_results (student_id, subject, grade) VALUES (:student_id, :subject, :grade)');
+              $this->db->bind(':student_id', $studentId);
+              $this->db->bind(':subject', $subject);
+              $this->db->bind(':grade', $grade);
+              $this->db->execute();
+          }
 
-            // Commit transaction
-            $this->db->endTransaction();
-            return $studentId;
-        } catch (Exception $e) {
-            // Rollback transaction on error
-            $this->db->cancelTransaction();
-            return false;
-        }
-    }
+          // Commit transaction
+          $this->db->endTransaction();
+          return $studentId;
+      } catch (Exception $e) {
+          // Rollback transaction on error
+          $this->db->cancelTransaction();
+          return false;
+      }
+  }
 
-    // Register stream head
-    public function registerStreamHead($data) {
-        // Hash password
-        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+  // Register stream head
+  public function registerStreamHead($data) {
+      // Hash password
+      $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-        // Begin transaction
-        $this->db->beginTransaction();
+      // Begin transaction
+      $this->db->beginTransaction();
 
-        try {
-            // Insert user
-            $this->db->query('INSERT INTO users (username, password, email, role) VALUES (:username, :password, :email, :role)');
-            $this->db->bind(':username', $data['username']);
-            $this->db->bind(':password', $data['password']);
-            $this->db->bind(':email', $data['email']);
-            $this->db->bind(':role', 'stream_head');
-            
-            $this->db->execute();
-            $userId = $this->db->lastInsertId();
+      try {
+          // Insert user
+          $this->db->query('INSERT INTO users (username, password, email, role) VALUES (:username, :password, :email, :role)');
+          $this->db->bind(':username', $data['username']);
+          $this->db->bind(':password', $data['password']);
+          $this->db->bind(':email', $data['email']);
+          $this->db->bind(':role', 'stream_head');
+          
+          $this->db->execute();
+          $userId = $this->db->lastInsertId();
 
-            // Update stream with new head
-            $this->db->query('UPDATE streams SET head_user_id = :head_user_id WHERE id = :stream_id');
-            $this->db->bind(':head_user_id', $userId);
-            $this->db->bind(':stream_id', $data['stream_id']);
-            
-            $this->db->execute();
+          // Update stream with new head
+          $this->db->query('UPDATE streams SET head_user_id = :head_user_id WHERE id = :stream_id');
+          $this->db->bind(':head_user_id', $userId);
+          $this->db->bind(':stream_id', $data['stream_id']);
+          
+          $this->db->execute();
 
-            // Commit transaction
-            $this->db->endTransaction();
-            return true;
-        } catch (Exception $e) {
-            // Rollback transaction on error
-            $this->db->cancelTransaction();
-            return false;
-        }
-    }
+          // Commit transaction
+          $this->db->endTransaction();
+          return true;
+      } catch (Exception $e) {
+          // Rollback transaction on error
+          $this->db->cancelTransaction();
+          return false;
+      }
+  }
 
-    // Remove stream head
-    public function removeStreamHead($userId) {
-        // Begin transaction
-        $this->db->beginTransaction();
+  // Register administrator
+  public function registerAdministrator($data) {
+      // Hash password
+      $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-        try {
-            // Get streams associated with this user
-            $this->db->query('SELECT id FROM streams WHERE head_user_id = :head_user_id');
-            $this->db->bind(':head_user_id', $userId);
-            $streams = $this->db->resultSet();
+      try {
+          // Insert user
+          $this->db->query('INSERT INTO users (username, password, email, role) VALUES (:username, :password, :email, :role)');
+          $this->db->bind(':username', $data['username']);
+          $this->db->bind(':password', $data['password']);
+          $this->db->bind(':email', $data['email']);
+          $this->db->bind(':role', 'administrator');
+          
+          return $this->db->execute();
+      } catch (Exception $e) {
+          return false;
+      }
+  }
 
-            // Remove head_user_id from streams
-            foreach($streams as $stream) {
-                $this->db->query('UPDATE streams SET head_user_id = NULL WHERE id = :id');
-                $this->db->bind(':id', $stream->id);
-                $this->db->execute();
-            }
+  // Remove stream head
+  public function removeStreamHead($userId) {
+      // Begin transaction
+      $this->db->beginTransaction();
 
-            // Delete user
-            $this->db->query('DELETE FROM users WHERE id = :id AND role = :role');
-            $this->db->bind(':id', $userId);
-            $this->db->bind(':role', 'stream_head');
-            $this->db->execute();
+      try {
+          // Get streams associated with this user
+          $this->db->query('SELECT id FROM streams WHERE head_user_id = :head_user_id');
+          $this->db->bind(':head_user_id', $userId);
+          $streams = $this->db->resultSet();
 
-            // Commit transaction
-            $this->db->endTransaction();
-            return true;
-        } catch (Exception $e) {
-            // Rollback transaction on error
-            $this->db->cancelTransaction();
-            return false;
-        }
-    }
+          // Remove head_user_id from streams
+          foreach($streams as $stream) {
+              $this->db->query('UPDATE streams SET head_user_id = NULL WHERE id = :id');
+              $this->db->bind(':id', $stream->id);
+              $this->db->execute();
+          }
 
-    // Login user
-    public function login($username, $password) {
-        $this->db->query('SELECT * FROM users WHERE username = :username');
-        $this->db->bind(':username', $username);
+          // Delete user
+          $this->db->query('DELETE FROM users WHERE id = :id AND role = :role');
+          $this->db->bind(':id', $userId);
+          $this->db->bind(':role', 'stream_head');
+          $this->db->execute();
 
-        $row = $this->db->single();
+          // Commit transaction
+          $this->db->endTransaction();
+          return true;
+      } catch (Exception $e) {
+          // Rollback transaction on error
+          $this->db->cancelTransaction();
+          return false;
+      }
+  }
 
-        if($row) {
-            $hashed_password = $row->password;
-            if(password_verify($password, $hashed_password)) {
-                return $row;
-            }
-        }
-        
-        return false;
-    }
+  // Remove administrator
+  public function removeAdministrator($userId) {
+      try {
+          // Delete user
+          $this->db->query('DELETE FROM users WHERE id = :id AND role = :role');
+          $this->db->bind(':id', $userId);
+          $this->db->bind(':role', 'administrator');
+          
+          return $this->db->execute();
+      } catch (Exception $e) {
+          return false;
+      }
+  }
 
-    // Find user by username
-    public function findUserByUsername($username) {
-        $this->db->query('SELECT * FROM users WHERE username = :username');
-        $this->db->bind(':username', $username);
+  // Login user
+  public function login($username, $password) {
+      $this->db->query('SELECT * FROM users WHERE username = :username');
+      $this->db->bind(':username', $username);
 
-        $row = $this->db->single();
+      $row = $this->db->single();
 
-        // Check row
-        if($this->db->rowCount() > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+      if($row) {
+          $hashed_password = $row->password;
+          if(password_verify($password, $hashed_password)) {
+              return $row;
+          }
+      }
+      
+      return false;
+  }
 
-    // Find user by email
-    public function findUserByEmail($email) {
-        $this->db->query('SELECT * FROM users WHERE email = :email');
-        $this->db->bind(':email', $email);
+  // Find user by username
+  public function findUserByUsername($username) {
+      $this->db->query('SELECT * FROM users WHERE username = :username');
+      $this->db->bind(':username', $username);
 
-        $row = $this->db->single();
+      $row = $this->db->single();
 
-        // Check row
-        if($this->db->rowCount() > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+      // Check row
+      if($this->db->rowCount() > 0) {
+          return true;
+      } else {
+          return false;
+      }
+  }
 
-    // Get user by ID
-    public function getUserById($id) {
-        $this->db->query('SELECT * FROM users WHERE id = :id');
-        $this->db->bind(':id', $id);
+  // Find user by email
+  public function findUserByEmail($email) {
+      $this->db->query('SELECT * FROM users WHERE email = :email');
+      $this->db->bind(':email', $email);
 
-        $row = $this->db->single();
+      $row = $this->db->single();
 
-        return $row;
-    }
+      // Check row
+      if($this->db->rowCount() > 0) {
+          return true;
+      } else {
+          return false;
+      }
+  }
 
-    // Get student profile by user ID
-    public function getStudentByUserId($userId) {
-        $this->db->query('SELECT * FROM students WHERE user_id = :user_id');
-        $this->db->bind(':user_id', $userId);
+  // Get user by ID
+  public function getUserById($id) {
+      $this->db->query('SELECT * FROM users WHERE id = :id');
+      $this->db->bind(':id', $id);
 
-        $row = $this->db->single();
+      $row = $this->db->single();
 
-        return $row;
-    }
+      return $row;
+  }
 
-    // Get all stream heads
-    public function getStreamHeads() {
-        $this->db->query('SELECT users.*, streams.name as stream_name, streams.id as stream_id 
-                        FROM users 
-                        JOIN streams ON users.id = streams.head_user_id 
-                        WHERE users.role = "stream_head"');
-        
-        $results = $this->db->resultSet();
+  // Get student profile by user ID
+  public function getStudentByUserId($userId) {
+      $this->db->query('SELECT * FROM students WHERE user_id = :user_id');
+      $this->db->bind(':user_id', $userId);
 
-        return $results;
-    }
+      $row = $this->db->single();
+
+      return $row;
+  }
+
+  // Get all stream heads
+  public function getStreamHeads() {
+      $this->db->query('SELECT users.*, streams.name as stream_name, streams.id as stream_id 
+                      FROM users 
+                      JOIN streams ON users.id = streams.head_user_id 
+                      WHERE users.role = "stream_head"');
+      
+      $results = $this->db->resultSet();
+
+      return $results;
+  }
+
+  // Get all administrators
+  public function getAdministrators() {
+      $this->db->query('SELECT * FROM users WHERE role = "administrator"');
+      
+      $results = $this->db->resultSet();
+
+      return $results;
+  }
 }
 
