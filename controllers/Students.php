@@ -59,8 +59,6 @@ class Students {
 
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Process form
-            
-            // Sanitize POST data
             $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
             // Init data
@@ -130,21 +128,17 @@ class Students {
         }
     }
 
-    // Get subjects by stream (AJAX)
+    // Get subjects by stream
     public function getSubjects() {
-        // Check if AJAX request
         if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-            // Get stream ID
+
             $streamId = $_GET['stream_id'];
             
-            // Get subjects
             $subjects = $this->streamModel->getSubjectsByStreamId($streamId);
             
-            // Return JSON
             header('Content-Type: application/json');
             echo json_encode($subjects);
         } else {
-            // Not AJAX request
             header('location: ' . URL_ROOT . '/students/apply');
         }
     }

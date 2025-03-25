@@ -87,7 +87,11 @@
             
             if(streamId) {
                 // Fetch subjects for selected stream
-                fetch('<?php echo URL_ROOT; ?>/students/getSubjects?stream_id=' + streamId)
+                fetch('<?php echo URL_ROOT; ?>/students/getSubjects?stream_id=' + streamId, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
                     .then(response => response.json())
                     .then(data => {
                         // Clear previous subjects

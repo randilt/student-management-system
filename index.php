@@ -124,6 +124,16 @@ switch($controller) {
                 break;
         }
         break;
+    case 'pages':
+        switch($method) {
+            case 'about':
+                $pagesController->about();
+                break;
+            default:
+                $pagesController->index();
+                break;
+        }
+        break;
     default:
         $pagesController->index();
         break;

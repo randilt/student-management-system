@@ -9,7 +9,7 @@ define('DB_NAME', 'student_management');
 define('SITE_NAME', 'Student Management System');
 define('APP_ROOT', dirname(dirname(__FILE__)));
 define('URL_ROOT', 'http://localhost/student_management');
-define('URL_SUBFOLDER', '');
+define('URL_SUBFOLDER', 'student_management');
 
 // Session configuration
 session_start();
