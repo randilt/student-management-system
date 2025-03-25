@@ -1,5 +1,5 @@
 </div>
-    <div class="col-md-12">
+    <!-- <div class="col-md-12">
         <div class="card mb-4">
             <div class="card-body">
                 <h2 class="card-title">For Administrators</h2>
@@ -11,7 +11,7 @@
                 <?php endif; ?>
             </div>
         </div>
-    </div>
+    </div> -->
     <script src="<?php echo URL_ROOT; ?>/js/main.js"></script>
 </body>
 </html>
