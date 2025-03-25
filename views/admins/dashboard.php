@@ -90,34 +90,41 @@
     </div>
 </div>
 
-<?php if($_SESSION['user_role'] == 'principal' && isset($data['streamHeads']) && !empty($data['streamHeads'])) : ?>
+<?php if($_SESSION['user_role'] == 'principal') : ?>
 <div class="row mt-4">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title">Stream Heads</h3>
+                <a href="<?php echo URL_ROOT; ?>/admins/addStreamHead" class="btn btn-primary">Add Stream Head</a>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Stream</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($data['streamHeads'] as $streamHead) : ?>
+                <?php if(isset($data['streamHeads']) && !empty($data['streamHeads'])) : ?>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
                                 <tr>
-                                    <td><?php echo $streamHead->username; ?></td>
-                                    <td><?php echo $streamHead->email; ?></td>
-                                    <td><?php echo $streamHead->stream_name; ?></td>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Stream</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                <?php foreach($data['streamHeads'] as $streamHead) : ?>
+                                    <tr>
+                                        <td><?php echo $streamHead->username; ?></td>
+                                        <td><?php echo $streamHead->email; ?></td>
+                                        <td><?php echo $streamHead->stream_name; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else : ?>
+                    <div class="alert alert-warning">
+                        <p class="mb-0">No stream heads found. <a href="<?php echo URL_ROOT; ?>/admins/addStreamHead">Add a stream head</a>.</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>

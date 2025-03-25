@@ -119,6 +119,9 @@ switch($controller) {
             case 'updateStatus':
                 $adminsController->updateStatus();
                 break;
+            case 'addStreamHead':
+                $adminsController->addStreamHead();
+                break;
             default:
                 $pagesController->index();
                 break;

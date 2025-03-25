@@ -61,6 +61,42 @@ class User {
         }
     }
 
+    // Register stream head
+    public function registerStreamHead($data) {
+        // Hash password
+        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+
+        // Begin transaction
+        $this->db->beginTransaction();
+
+        try {
+            // Insert user
+            $this->db->query('INSERT INTO users (username, password, email, role) VALUES (:username, :password, :email, :role)');
+            $this->db->bind(':username', $data['username']);
+            $this->db->bind(':password', $data['password']);
+            $this->db->bind(':email', $data['email']);
+            $this->db->bind(':role', 'stream_head');
+            
+            $this->db->execute();
+            $userId = $this->db->lastInsertId();
+
+            // Update stream with new head
+            $this->db->query('UPDATE streams SET head_user_id = :head_user_id WHERE id = :stream_id');
+            $this->db->bind(':head_user_id', $userId);
+            $this->db->bind(':stream_id', $data['stream_id']);
+            
+            $this->db->execute();
+
+            // Commit transaction
+            $this->db->endTransaction();
+            return true;
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->db->cancelTransaction();
+            return false;
+        }
+    }
+
     // Login user
     public function login($username, $password) {
         $this->db->query('SELECT * FROM users WHERE username = :username');
