@@ -196,7 +196,8 @@ class Users {
                 'username' => trim($_POST['username']),
                 'password' => trim($_POST['password']),
                 'username_err' => '',
-                'password_err' => '',      
+                'password_err' => '',
+                'account_err' => '' 
             ];
 
             // Validate Username
@@ -227,11 +228,16 @@ class Users {
                 // Check and set logged in user
                 $loggedInUser = $this->userModel->login($data['username'], $data['password']);
 
-                if($loggedInUser) {
+                if($loggedInUser === 'deactivated') {
+                    $data['account_err'] = 'Your account has been deactivated. Please contact the administrator.';
+                    // Load view with errors
+                    require_once APP_ROOT . '/views/users/login.php';
+                } elseif($loggedInUser) {
                     // Create Session
                     $this->createUserSession($loggedInUser);
                 } else {
                     $data['password_err'] = 'Password incorrect';
+                    // Load view with errors
                     require_once APP_ROOT . '/views/users/login.php';
                 }
             } else {
@@ -244,7 +250,8 @@ class Users {
                 'username' => '',
                 'password' => '',
                 'username_err' => '',
-                'password_err' => '',        
+                'password_err' => '',
+                'account_err' => ''        
             ];
 
             // Load view

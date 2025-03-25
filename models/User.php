@@ -104,12 +104,13 @@ class User {
 
       try {
           // Insert user
-          $this->db->query('INSERT INTO users (username, password, email, role) VALUES (:username, :password, :email, :role)');
+          $this->db->query('INSERT INTO users (username, password, email, role, account_status) VALUES (:username, :password, :email, :role, :account_status)');
           $this->db->bind(':username', $data['username']);
           $this->db->bind(':password', $data['password']);
           $this->db->bind(':email', $data['email']);
           $this->db->bind(':role', 'administrator');
-          
+          $this->db->bind(':account_status', 'active');
+        
           return $this->db->execute();
       } catch (Exception $e) {
           return false;
@@ -152,17 +153,33 @@ class User {
 
   // Remove administrator
   public function removeAdministrator($userId) {
-      try {
-          // Delete user
-          $this->db->query('DELETE FROM users WHERE id = :id AND role = :role');
-          $this->db->bind(':id', $userId);
-          $this->db->bind(':role', 'administrator');
-          
-          return $this->db->execute();
-      } catch (Exception $e) {
-          return false;
-      }
-  }
+    try {
+        // Update user status to deactivated
+        $this->db->query('UPDATE users SET account_status = :status WHERE id = :id AND role = :role');
+        $this->db->bind(':status', 'deactivated');
+        $this->db->bind(':id', $userId);
+        $this->db->bind(':role', 'administrator');
+        
+        return $this->db->execute();
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+// Add a new method to activate an administrator
+public function activateAdministrator($userId) {
+    try {
+        // Update user status to active
+        $this->db->query('UPDATE users SET account_status = :status WHERE id = :id AND role = :role');
+        $this->db->bind(':status', 'active');
+        $this->db->bind(':id', $userId);
+        $this->db->bind(':role', 'administrator');
+        
+        return $this->db->execute();
+    } catch (Exception $e) {
+        return false;
+    }
+}
 
   // Login user
   public function login($username, $password) {
@@ -174,6 +191,10 @@ class User {
       if($row) {
           $hashed_password = $row->password;
           if(password_verify($password, $hashed_password)) {
+              // Check if account is active
+              if($row->account_status == 'deactivated') {
+                  return 'deactivated';
+              }
               return $row;
           }
       }
@@ -245,8 +266,8 @@ class User {
 
   // Get all administrators
   public function getAdministrators() {
-      $this->db->query('SELECT * FROM users WHERE role = "administrator"');
-      
+      $this->db->query('SELECT * FROM users WHERE role = "administrator" ORDER BY account_status ASC');
+    
       $results = $this->db->resultSet();
 
       return $results;

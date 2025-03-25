@@ -18,6 +18,11 @@
                         <input type="password" name="password" class="form-control <?php echo (!empty($data['password_err'])) ? 'is-invalid' : ''; ?>" id="password">
                         <div class="invalid-feedback"><?php echo $data['password_err']; ?></div>
                     </div>
+                    <?php if(!empty($data['account_err'])) : ?>
+                        <div class="alert alert-danger">
+                            <?php echo $data['account_err']; ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block">Login</button>
                     </div>

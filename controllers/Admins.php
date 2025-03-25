@@ -484,9 +484,51 @@ class Admins {
             // Remove administrator
             if($this->userModel->removeAdministrator($adminId)) {
                 // Set flash message
-                $_SESSION['success_message'] = 'Administrator removed successfully';
+                $_SESSION['success_message'] = 'Administrator deactivated successfully';
             } else {
-                $_SESSION['error_message'] = 'Failed to remove administrator';
+                $_SESSION['error_message'] = 'Failed to deactivate administrator';
+            }
+
+            // Redirect to dashboard
+            header('location: ' . URL_ROOT . '/admins/dashboard');
+        } else {
+            header('location: ' . URL_ROOT . '/admins/dashboard');
+        }
+    }
+
+    // Add a new method to activate an administrator
+    public function activateAdministrator($id = null) {
+        // Check if logged in
+        if(!isset($_SESSION['user_id'])) {
+            header('location: ' . URL_ROOT . '/users/login');
+        }
+
+        // Check if role is administrator
+        if($_SESSION['user_role'] != 'administrator') {
+            header('location: ' . URL_ROOT . '/users/login');
+        }
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Process form
+            
+            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            // Get administrator ID
+            $adminId = isset($_POST['admin_id']) ? $_POST['admin_id'] : $id;
+
+            if(empty($adminId)) {
+                $_SESSION['error_message'] = 'Invalid administrator ID';
+                header('location: ' . URL_ROOT . '/admins/dashboard');
+                return;
+            }
+
+            // Activate administrator
+            if($this->userModel->activateAdministrator($adminId)) {
+                // Set flash message
+                $_SESSION['success_message'] = 'Administrator activated successfully';
+            } else {
+                $_SESSION['error_message'] = 'Failed to activate administrator';
             }
 
             // Redirect to dashboard

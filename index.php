@@ -139,6 +139,13 @@ switch($controller) {
                   $adminsController->removeAdministrator();
               }
               break;
+          case 'activateAdministrator':
+              if(isset($params[0])) {
+                  $adminsController->activateAdministrator($params[0]);
+              } else {
+                  $adminsController->activateAdministrator();
+              }
+              break;
           case 'addStream':
               $adminsController->addStream();
               break;

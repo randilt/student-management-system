@@ -228,20 +228,35 @@
                               <tr>
                                   <th>Username</th>
                                   <th>Email</th>
+                                  <th>Status</th>
                                   <th>Actions</th>
                               </tr>
                           </thead>
                           <tbody>
                               <?php foreach($data['administrators'] as $admin) : ?>
-                                  <tr>
+                                  <tr <?php echo ($admin->account_status == 'deactivated') ? 'class="table-secondary"' : ''; ?>>
                                       <td><?php echo $admin->username; ?></td>
                                       <td><?php echo $admin->email; ?></td>
                                       <td>
+                                          <?php if($admin->account_status == 'active') : ?>
+                                              <span class="badge badge-success">Active</span>
+                                          <?php else : ?>
+                                              <span class="badge badge-secondary">Deactivated</span>
+                                          <?php endif; ?>
+                                      </td>
+                                      <td>
                                           <?php if($admin->id != $_SESSION['user_id']) : ?>
-                                              <form action="<?php echo URL_ROOT; ?>/admins/removeAdministrator" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to remove this administrator?');">
-                                                  <input type="hidden" name="admin_id" value="<?php echo $admin->id; ?>">
-                                                  <button type="submit" class="btn btn-sm btn-danger">Remove</button>
-                                              </form>
+                                              <?php if($admin->account_status == 'active') : ?>
+                                                  <form action="<?php echo URL_ROOT; ?>/admins/removeAdministrator" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to deactivate this administrator?');">
+                                                      <input type="hidden" name="admin_id" value="<?php echo $admin->id; ?>">
+                                                      <button type="submit" class="btn btn-sm btn-warning">Deactivate</button>
+                                                  </form>
+                                              <?php else : ?>
+                                                  <form action="<?php echo URL_ROOT; ?>/admins/activateAdministrator" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to activate this administrator?');">
+                                                      <input type="hidden" name="admin_id" value="<?php echo $admin->id; ?>">
+                                                      <button type="submit" class="btn btn-sm btn-success">Activate</button>
+                                                  </form>
+                                              <?php endif; ?>
                                           <?php else : ?>
                                               <span class="badge badge-secondary">Current User</span>
                                           <?php endif; ?>
