@@ -54,6 +54,10 @@
                         </ul>
                     </div>
                 </div>
+            
+                        </ul>
+                    </div>
+                </div>
                 
                 <div class="row">
                     <div class="col-md-12">
@@ -80,6 +84,30 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <h4>Additional Information</h4>
+                        <table class="table">
+                            <tr>
+                                <th>Index Number:</th>
+                                <td><?php echo $data['student']->index_number; ?></td>
+                            </tr>
+                            <tr>
+                                <th>NIC Number:</th>
+                                <td><?php echo $data['student']->nic_number; ?></td>
+                            </tr>
+                            <tr>
+                                <th>O/L Exam Year:</th>
+                                <td><?php echo $data['student']->ol_exam_year; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Preferred Stream:</th>
+                                <td><?php echo $data['student']->preferred_stream_name; ?></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

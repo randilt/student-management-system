@@ -1,13 +1,18 @@
 <?php
 class Users {
     private $userModel;
+    private $streamModel;
     
     public function __construct() {
         $this->userModel = new User();
+        $this->streamModel = new Stream();
     }
 
     // Register new user
     public function register() {
+        // Get streams for dropdown
+        $streams = $this->streamModel->getStreams();
+        
         // Check for POST
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Process form
@@ -27,6 +32,10 @@ class Users {
                 'contact_number' => trim($_POST['contact_number']),
                 'parent_name' => trim($_POST['parent_name']),
                 'parent_contact' => trim($_POST['parent_contact']),
+                'index_number' => trim($_POST['index_number']),
+                'nic_number' => trim($_POST['nic_number']),
+                'ol_exam_year' => trim($_POST['ol_exam_year']),
+                'preferred_stream_id' => $_POST['preferred_stream_id'],
                 'ol_results' => $_POST['ol_results'],
                 'username_err' => '',
                 'email_err' => '',
@@ -40,7 +49,12 @@ class Users {
                 'contact_number_err' => '',
                 'parent_name_err' => '',
                 'parent_contact_err' => '',
-                'ol_results_err' => ''
+                'index_number_err' => '',
+                'nic_number_err' => '',
+                'ol_exam_year_err' => '',
+                'preferred_stream_id_err' => '',
+                'ol_results_err' => '',
+                'streams' => $streams
             ];
 
             // Validate Username
@@ -118,6 +132,28 @@ class Users {
             if(empty($data['parent_contact'])) {
                 $data['parent_contact_err'] = 'Please enter parent contact';
             }
+            
+            // Validate index number
+            if(empty($data['index_number'])) {
+                $data['index_number_err'] = 'Please enter index number';
+            }
+            
+            // Validate NIC number
+            if(empty($data['nic_number'])) {
+                $data['nic_number_err'] = 'Please enter NIC number';
+            }
+            
+            // Validate O/L exam year
+            if(empty($data['ol_exam_year'])) {
+                $data['ol_exam_year_err'] = 'Please enter O/L exam year';
+            } elseif(!is_numeric($data['ol_exam_year']) || strlen($data['ol_exam_year']) != 4) {
+                $data['ol_exam_year_err'] = 'Please enter a valid year';
+            }
+            
+            // Validate preferred stream
+            if(empty($data['preferred_stream_id'])) {
+                $data['preferred_stream_id_err'] = 'Please select preferred A/L stream';
+            }
 
             // Validate O/L results
             if(empty($data['ol_results'])) {
@@ -131,6 +167,8 @@ class Users {
                empty($data['date_of_birth_err']) && empty($data['gender_err']) &&
                empty($data['address_err']) && empty($data['contact_number_err']) &&
                empty($data['parent_name_err']) && empty($data['parent_contact_err']) &&
+               empty($data['index_number_err']) && empty($data['nic_number_err']) &&
+               empty($data['ol_exam_year_err']) && empty($data['preferred_stream_id_err']) &&
                empty($data['ol_results_err'])) {
                 
                 // Register User
@@ -163,6 +201,10 @@ class Users {
                 'contact_number' => '',
                 'parent_name' => '',
                 'parent_contact' => '',
+                'index_number' => '',
+                'nic_number' => '',
+                'ol_exam_year' => '',
+                'preferred_stream_id' => '',
                 'ol_results' => [],
                 'username_err' => '',
                 'email_err' => '',
@@ -176,7 +218,12 @@ class Users {
                 'contact_number_err' => '',
                 'parent_name_err' => '',
                 'parent_contact_err' => '',
-                'ol_results_err' => ''
+                'index_number_err' => '',
+                'nic_number_err' => '',
+                'ol_exam_year_err' => '',
+                'preferred_stream_id_err' => '',
+                'ol_results_err' => '',
+                'streams' => $streams
             ];
 
             // Load view

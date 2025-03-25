@@ -78,6 +78,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="contact_number" class="form-label">Contact Number</label>
+                                <!-- <input type  class="form-label">Contact Number</label> -->
                                 <input type="text" name="contact_number" class="form-control <?php echo (!empty($data['contact_number_err'])) ? 'is-invalid' : ''; ?>" id="contact_number" value="<?php echo $data['contact_number']; ?>">
                                 <div class="invalid-feedback"><?php echo $data['contact_number_err']; ?></div>
                             </div>
@@ -94,6 +95,46 @@
                                         <label for="parent_contact" class="form-label">Parent/Guardian Contact</label>
                                         <input type="text" name="parent_contact" class="form-control <?php echo (!empty($data['parent_contact_err'])) ? 'is-invalid' : ''; ?>" id="parent_contact" value="<?php echo $data['parent_contact']; ?>">
                                         <div class="invalid-feedback"><?php echo $data['parent_contact_err']; ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- New fields for additional information -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="index_number" class="form-label">Index Number</label>
+                                        <input type="text" name="index_number" class="form-control <?php echo (!empty($data['index_number_err'])) ? 'is-invalid' : ''; ?>" id="index_number" value="<?php echo $data['index_number']; ?>">
+                                        <div class="invalid-feedback"><?php echo $data['index_number_err']; ?></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="nic_number" class="form-label">NIC Number</label>
+                                        <input type="text" name="nic_number" class="form-control <?php echo (!empty($data['nic_number_err'])) ? 'is-invalid' : ''; ?>" id="nic_number" value="<?php echo $data['nic_number']; ?>">
+                                        <div class="invalid-feedback"><?php echo $data['nic_number_err']; ?></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="ol_exam_year" class="form-label">O/L Exam Year</label>
+                                        <input type="number" name="ol_exam_year" class="form-control <?php echo (!empty($data['ol_exam_year_err'])) ? 'is-invalid' : ''; ?>" id="ol_exam_year" value="<?php echo $data['ol_exam_year']; ?>" min="2000" max="<?php echo date('Y'); ?>">
+                                        <div class="invalid-feedback"><?php echo $data['ol_exam_year_err']; ?></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="preferred_stream_id" class="form-label">Preferred A/L Stream</label>
+                                        <select name="preferred_stream_id" class="form-select <?php echo (!empty($data['preferred_stream_id_err'])) ? 'is-invalid' : ''; ?>" id="preferred_stream_id">
+                                            <option value="" selected disabled>Select Preferred Stream</option>
+                                            <?php foreach($data['streams'] as $stream) : ?>
+                                                <option value="<?php echo $stream->id; ?>" <?php echo ($data['preferred_stream_id'] == $stream->id) ? 'selected' : ''; ?>>
+                                                    <?php echo $stream->name; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <div class="invalid-feedback"><?php echo $data['preferred_stream_id_err']; ?></div>
                                     </div>
                                 </div>
                             </div>

@@ -26,8 +26,8 @@ class User {
           $userId = $this->db->lastInsertId();
 
           // Insert student profile
-          $this->db->query('INSERT INTO students (user_id, first_name, last_name, date_of_birth, gender, address, contact_number, parent_name, parent_contact) 
-                          VALUES (:user_id, :first_name, :last_name, :date_of_birth, :gender, :address, :contact_number, :parent_name, :parent_contact)');
+          $this->db->query('INSERT INTO students (user_id, first_name, last_name, date_of_birth, gender, address, contact_number, parent_name, parent_contact, index_number, nic_number, ol_exam_year, preferred_stream_id) 
+                          VALUES (:user_id, :first_name, :last_name, :date_of_birth, :gender, :address, :contact_number, :parent_name, :parent_contact, :index_number, :nic_number, :ol_exam_year, :preferred_stream_id)');
           
           $this->db->bind(':user_id', $userId);
           $this->db->bind(':first_name', $data['first_name']);
@@ -38,6 +38,10 @@ class User {
           $this->db->bind(':contact_number', $data['contact_number']);
           $this->db->bind(':parent_name', $data['parent_name']);
           $this->db->bind(':parent_contact', $data['parent_contact']);
+          $this->db->bind(':index_number', $data['index_number']);
+          $this->db->bind(':nic_number', $data['nic_number']);
+          $this->db->bind(':ol_exam_year', $data['ol_exam_year']);
+          $this->db->bind(':preferred_stream_id', $data['preferred_stream_id']);
           
           $this->db->execute();
           $studentId = $this->db->lastInsertId();
@@ -244,7 +248,10 @@ public function activateAdministrator($userId) {
 
   // Get student profile by user ID
   public function getStudentByUserId($userId) {
-      $this->db->query('SELECT * FROM students WHERE user_id = :user_id');
+      $this->db->query('SELECT s.*, st.name as preferred_stream_name 
+                      FROM students s
+                      LEFT JOIN streams st ON s.preferred_stream_id = st.id
+                      WHERE s.user_id = :user_id');
       $this->db->bind(':user_id', $userId);
 
       $row = $this->db->single();

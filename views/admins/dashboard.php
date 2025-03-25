@@ -124,6 +124,9 @@
                           <thead>
                               <tr>
                                   <th>Student Name</th>
+                                  <th>Index Number</th>
+                                  <th>NIC Number</th>
+                                  <th>O/L Year</th>
                                   <th>Stream</th>
                                   <th>Applied Date</th>
                                   <th>Status</th>
@@ -134,6 +137,9 @@
                               <?php foreach($data['applications'] as $application) : ?>
                                   <tr>
                                       <td><?php echo $application->first_name . ' ' . $application->last_name; ?></td>
+                                      <td><?php echo $application->index_number; ?></td>
+                                      <td><?php echo $application->nic_number; ?></td>
+                                      <td><?php echo $application->ol_exam_year; ?></td>
                                       <td><?php echo $application->stream_name; ?></td>
                                       <td><?php echo date('M d, Y', strtotime($application->applied_at)); ?></td>
                                       <td>

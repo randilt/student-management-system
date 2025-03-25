@@ -41,12 +41,14 @@ class Application {
   // Get application by ID
   public function getApplicationById($id) {
       $this->db->query('SELECT a.*, s.name as stream_name, 
-                      st.first_name, st.last_name, 
+                      st.first_name, st.last_name, st.index_number, st.nic_number, st.ol_exam_year,
+                      st.preferred_stream_id, ps.name as preferred_stream_name,
                       u.email, u.username
                       FROM applications a
                       JOIN streams s ON a.stream_id = s.id
                       JOIN students st ON a.student_id = st.id
                       JOIN users u ON st.user_id = u.id
+                      LEFT JOIN streams ps ON st.preferred_stream_id = ps.id
                       WHERE a.id = :id');
       $this->db->bind(':id', $id);
 
@@ -77,7 +79,7 @@ class Application {
   // Get applications by stream ID
   public function getApplicationsByStreamId($streamId) {
       $this->db->query('SELECT a.*, s.name as stream_name, 
-                      st.first_name, st.last_name, 
+                      st.first_name, st.last_name, st.index_number, st.nic_number, st.ol_exam_year,
                       u.email, u.username,
                       CASE 
                           WHEN a.status = "pending" THEN "Pending Review"
@@ -100,7 +102,7 @@ class Application {
   // Get all applications (for principal)
   public function getAllApplications() {
       $this->db->query('SELECT a.*, s.name as stream_name, 
-                      st.first_name, st.last_name, 
+                      st.first_name, st.last_name, st.index_number, st.nic_number, st.ol_exam_year,
                       u.email, u.username,
                       CASE 
                           WHEN a.status = "pending" THEN "Pending Review"

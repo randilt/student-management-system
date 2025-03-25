@@ -23,6 +23,22 @@
                                 <th>Username:</th>
                                 <td><?php echo $data['application']->username; ?></td>
                             </tr>
+                            <tr>
+                                <th>Index Number:</th>
+                                <td><?php echo $data['application']->index_number; ?></td>
+                            </tr>
+                            <tr>
+                                <th>NIC Number:</th>
+                                <td><?php echo $data['application']->nic_number; ?></td>
+                            </tr>
+                            <tr>
+                                <th>O/L Exam Year:</th>
+                                <td><?php echo $data['application']->ol_exam_year; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Preferred Stream:</th>
+                                <td><?php echo $data['application']->preferred_stream_name; ?></td>
+                            </tr>
                         </table>
                     </div>
                     <div class="col-md-6">
