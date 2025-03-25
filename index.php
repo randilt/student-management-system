@@ -122,6 +122,22 @@ switch($controller) {
             case 'addStreamHead':
                 $adminsController->addStreamHead();
                 break;
+            case 'removeStreamHead':
+                if(isset($params[0])) {
+                    $adminsController->removeStreamHead($params[0]);
+                } else {
+                    $adminsController->removeStreamHead();
+                }
+                break;
+            case 'addStream':
+                $adminsController->addStream();
+                break;
+            case 'addSubject':
+                $adminsController->addSubject();
+                break;
+            case 'manageStreams':
+                $adminsController->manageStreams();
+                break;
             default:
                 $pagesController->index();
                 break;

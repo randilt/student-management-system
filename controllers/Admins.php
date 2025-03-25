@@ -31,10 +31,16 @@ class Admins {
             $applications = $this->applicationModel->getAllApplications();
             $streamHeads = $this->userModel->getStreamHeads();
             
+            // Get analytics data
+            $streamStats = $this->applicationModel->getApplicationCountByStream();
+            $subjectStats = $this->applicationModel->getMostSelectedSubjects();
+            
             $data = [
                 'user' => $user,
                 'applications' => $applications,
-                'streamHeads' => $streamHeads
+                'streamHeads' => $streamHeads,
+                'streamStats' => $streamStats,
+                'subjectStats' => $subjectStats
             ];
         } else {
             // Stream head sees only applications for their stream
@@ -291,6 +297,217 @@ class Admins {
             // Load view
             require_once APP_ROOT . '/views/admins/add_stream_head.php';
         }
+    }
+
+    // Remove stream head
+    public function removeStreamHead($id = null) {
+        // Check if logged in
+        if(!isset($_SESSION['user_id'])) {
+            header('location: ' . URL_ROOT . '/users/login');
+        }
+
+        // Check if role is principal
+        if($_SESSION['user_role'] != 'principal') {
+            header('location: ' . URL_ROOT . '/users/login');
+        }
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Process form
+            
+            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            // Get stream head ID
+            $streamHeadId = isset($_POST['stream_head_id']) ? $_POST['stream_head_id'] : $id;
+
+            if(empty($streamHeadId)) {
+                $_SESSION['error_message'] = 'Invalid stream head ID';
+                header('location: ' . URL_ROOT . '/admins/dashboard');
+                return;
+            }
+
+            // Remove stream head
+            if($this->userModel->removeStreamHead($streamHeadId)) {
+                // Set flash message
+                $_SESSION['success_message'] = 'Stream head removed successfully';
+            } else {
+                $_SESSION['error_message'] = 'Failed to remove stream head';
+            }
+
+            // Redirect to dashboard
+            header('location: ' . URL_ROOT . '/admins/dashboard');
+        } else {
+            header('location: ' . URL_ROOT . '/admins/dashboard');
+        }
+    }
+
+    // Add new stream form
+    public function addStream() {
+        // Check if logged in
+        if(!isset($_SESSION['user_id'])) {
+            header('location: ' . URL_ROOT . '/users/login');
+        }
+
+        // Check if role is principal
+        if($_SESSION['user_role'] != 'principal') {
+            header('location: ' . URL_ROOT . '/users/login');
+        }
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Process form
+            
+            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            // Init data
+            $data = [
+                'name' => trim($_POST['name']),
+                'description' => trim($_POST['description']),
+                'name_err' => '',
+                'description_err' => ''
+            ];
+
+            // Validate Name
+            if(empty($data['name'])) {
+                $data['name_err'] = 'Please enter stream name';
+            } else {
+                // Check if stream name exists
+                if($this->streamModel->findStreamByName($data['name'])) {
+                    $data['name_err'] = 'Stream name already exists';
+                }
+            }
+
+            // Validate Description
+            if(empty($data['description'])) {
+                $data['description_err'] = 'Please enter stream description';
+            }
+
+            // Make sure errors are empty
+            if(empty($data['name_err']) && empty($data['description_err'])) {
+                
+                // Add Stream
+                if($this->streamModel->addStream($data)) {
+                    // Set flash message
+                    $_SESSION['success_message'] = 'Stream added successfully';
+                    // Redirect to dashboard
+                    header('location: ' . URL_ROOT . '/admins/dashboard');
+                } else {
+                    die('Something went wrong');
+                }
+            } else {
+                // Load view with errors
+                require_once APP_ROOT . '/views/admins/add_stream.php';
+            }
+        } else {
+            // Init data
+            $data = [
+                'name' => '',
+                'description' => '',
+                'name_err' => '',
+                'description_err' => ''
+            ];
+
+            // Load view
+            require_once APP_ROOT . '/views/admins/add_stream.php';
+        }
+    }
+
+    // Add new subject form
+    public function addSubject() {
+        // Check if logged in
+        if(!isset($_SESSION['user_id'])) {
+            header('location: ' . URL_ROOT . '/users/login');
+        }
+
+        // Check if role is principal
+        if($_SESSION['user_role'] != 'principal') {
+            header('location: ' . URL_ROOT . '/users/login');
+        }
+
+        // Get all streams
+        $streams = $this->streamModel->getStreams();
+
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Process form
+            
+            // Sanitize POST data
+            $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+
+            // Init data
+            $data = [
+                'name' => trim($_POST['name']),
+                'stream_id' => $_POST['stream_id'],
+                'name_err' => '',
+                'stream_id_err' => '',
+                'streams' => $streams
+            ];
+
+            // Validate Name
+            if(empty($data['name'])) {
+                $data['name_err'] = 'Please enter subject name';
+            } else {
+                // Check if subject name exists in this stream
+                if($this->streamModel->findSubjectByNameAndStream($data['name'], $data['stream_id'])) {
+                    $data['name_err'] = 'Subject already exists in this stream';
+                }
+            }
+
+            // Validate Stream
+            if(empty($data['stream_id'])) {
+                $data['stream_id_err'] = 'Please select a stream';
+            }
+
+            // Make sure errors are empty
+            if(empty($data['name_err']) && empty($data['stream_id_err'])) {
+                
+                // Add Subject
+                if($this->streamModel->addSubject($data)) {
+                    // Set flash message
+                    $_SESSION['success_message'] = 'Subject added successfully';
+                    // Redirect to dashboard
+                    header('location: ' . URL_ROOT . '/admins/dashboard');
+                } else {
+                    die('Something went wrong');
+                }
+            } else {
+                // Load view with errors
+                require_once APP_ROOT . '/views/admins/add_subject.php';
+            }
+        } else {
+            // Init data
+            $data = [
+                'name' => '',
+                'stream_id' => '',
+                'name_err' => '',
+                'stream_id_err' => '',
+                'streams' => $streams
+            ];
+
+            // Load view
+            require_once APP_ROOT . '/views/admins/add_subject.php';
+        }
+    }
+
+    // Manage streams and subjects
+    public function manageStreams() {
+        // Check if logged in
+        if(!isset($_SESSION['user_id'])) {
+            header('location: ' . URL_ROOT . '/users/login');
+        }
+
+        // Check if role is principal
+        if($_SESSION['user_role'] != 'principal') {
+            header('location: ' . URL_ROOT . '/users/login');
+        }
+
+        // Get all streams with subjects
+        $streams = $this->streamModel->getStreamsWithSubjects();
+
+        $data = [
+            'streams' => $streams
+        ];
+
+        require_once APP_ROOT . '/views/admins/manage_streams.php';
     }
 }
 

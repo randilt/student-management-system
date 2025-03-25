@@ -25,6 +25,8 @@ class Application {
                 $this->db->query('INSERT INTO application_subjects (application_id, subject_id) VALUES (:application_id, :subject_id)');
                 $this->db->bind(':application_id', $applicationId);
                 $this->db->bind(':subject_id', $subjectId);
+                // $this  $applicationId);
+                $this->db->bind(':subject_id', $subjectId);
                 $this->db->execute();
             }
 
@@ -175,6 +177,38 @@ class Application {
         $this->db->execute();
 
         return $this->db->rowCount() > 0;
+    }
+
+    // Get application count by stream
+    public function getApplicationCountByStream() {
+        $this->db->query('SELECT s.id, s.name, 
+                        COUNT(a.id) as total_applications,
+                        SUM(CASE WHEN a.status = "pending" THEN 1 ELSE 0 END) as pending_count,
+                        SUM(CASE WHEN a.status = "approved" THEN 1 ELSE 0 END) as approved_count,
+                        SUM(CASE WHEN a.status = "rejected" THEN 1 ELSE 0 END) as rejected_count
+                        FROM streams s
+                        LEFT JOIN applications a ON s.id = a.stream_id
+                        GROUP BY s.id, s.name
+                        ORDER BY total_applications DESC');
+
+        $results = $this->db->resultSet();
+
+        return $results;
+    }
+
+    // Get most selected subjects
+    public function getMostSelectedSubjects() {
+        $this->db->query('SELECT s.id, s.name, s.stream_id, st.name as stream_name, COUNT(a_s.subject_id) as selection_count
+                        FROM subjects s
+                        JOIN streams st ON s.stream_id = st.id
+                        LEFT JOIN application_subjects a_s ON s.id = a_s.subject_id
+                        GROUP BY s.id, s.name, s.stream_id, st.name
+                        ORDER BY selection_count DESC
+                        LIMIT 10');
+
+        $results = $this->db->resultSet();
+
+        return $results;
     }
 }
 

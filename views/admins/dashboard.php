@@ -32,6 +32,73 @@
     </div>
 </div>
 
+<?php if($_SESSION['user_role'] == 'principal' && isset($data['streamStats'])) : ?>
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Application Statistics by Stream</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Stream</th>
+                                <th>Total</th>
+                                <th>Pending</th>
+                                <th>Approved</th>
+                                <th>Rejected</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($data['streamStats'] as $stat) : ?>
+                                <tr>
+                                    <td><?php echo $stat->name; ?></td>
+                                    <td><?php echo $stat->total_applications; ?></td>
+                                    <td><?php echo $stat->pending_count; ?></td>
+                                    <td><?php echo $stat->approved_count; ?></td>
+                                    <td><?php echo $stat->rejected_count; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Most Selected Subjects</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Stream</th>
+                                <th>Selections</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($data['subjectStats'] as $stat) : ?>
+                                <tr>
+                                    <td><?php echo $stat->name; ?></td>
+                                    <td><?php echo $stat->stream_name; ?></td>
+                                    <td><?php echo $stat->selection_count; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -96,7 +163,10 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h3 class="card-title">Stream Heads</h3>
-                <a href="<?php echo URL_ROOT; ?>/admins/addStreamHead" class="btn btn-primary">Add Stream Head</a>
+                <div>
+                    <a href="<?php echo URL_ROOT; ?>/admins/addStreamHead" class="btn btn-primary">Add Stream Head</a>
+                    <a href="<?php echo URL_ROOT; ?>/admins/manageStreams" class="btn btn-secondary">Manage Streams & Subjects</a>
+                </div>
             </div>
             <div class="card-body">
                 <?php if(isset($data['streamHeads']) && !empty($data['streamHeads'])) : ?>
@@ -107,6 +177,7 @@
                                     <th>Username</th>
                                     <th>Email</th>
                                     <th>Stream</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,6 +186,12 @@
                                         <td><?php echo $streamHead->username; ?></td>
                                         <td><?php echo $streamHead->email; ?></td>
                                         <td><?php echo $streamHead->stream_name; ?></td>
+                                        <td>
+                                            <form action="<?php echo URL_ROOT; ?>/admins/removeStreamHead" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to remove this stream head?');">
+                                                <input type="hidden" name="stream_head_id" value="<?php echo $streamHead->id; ?>">
+                                                <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

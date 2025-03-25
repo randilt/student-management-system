@@ -97,6 +97,40 @@ class User {
         }
     }
 
+    // Remove stream head
+    public function removeStreamHead($userId) {
+        // Begin transaction
+        $this->db->beginTransaction();
+
+        try {
+            // Get streams associated with this user
+            $this->db->query('SELECT id FROM streams WHERE head_user_id = :head_user_id');
+            $this->db->bind(':head_user_id', $userId);
+            $streams = $this->db->resultSet();
+
+            // Remove head_user_id from streams
+            foreach($streams as $stream) {
+                $this->db->query('UPDATE streams SET head_user_id = NULL WHERE id = :id');
+                $this->db->bind(':id', $stream->id);
+                $this->db->execute();
+            }
+
+            // Delete user
+            $this->db->query('DELETE FROM users WHERE id = :id AND role = :role');
+            $this->db->bind(':id', $userId);
+            $this->db->bind(':role', 'stream_head');
+            $this->db->execute();
+
+            // Commit transaction
+            $this->db->endTransaction();
+            return true;
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            $this->db->cancelTransaction();
+            return false;
+        }
+    }
+
     // Login user
     public function login($username, $password) {
         $this->db->query('SELECT * FROM users WHERE username = :username');
@@ -166,7 +200,7 @@ class User {
 
     // Get all stream heads
     public function getStreamHeads() {
-        $this->db->query('SELECT users.*, streams.name as stream_name 
+        $this->db->query('SELECT users.*, streams.name as stream_name, streams.id as stream_id 
                         FROM users 
                         JOIN streams ON users.id = streams.head_user_id 
                         WHERE users.role = "stream_head"');
