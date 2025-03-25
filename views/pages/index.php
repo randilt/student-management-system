@@ -7,6 +7,13 @@
 </div>
 
 <div class="row">
+    <div class="col-md-12 text-center mb-5">
+        <img src="images/sri-lankan-school-students.jpg" alt="Sri Lankan school students" class="hero-img">
+    </div>
+</div>
+
+
+<div class="row">
     <div class="col-md-12">
         <div class="card mb-4">
             <div class="card-body">

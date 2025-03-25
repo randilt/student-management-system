@@ -961,3 +961,14 @@ textarea.form-control {
 .footer a:hover {
   text-decoration: underline;
 }
+
+.hero-img {
+  width: 70%;
+  height: 100%;
+  object-fit: cover;
+}
+@media screen and (max-width: 768px) {
+  .hero-img {
+    width: 100%;
+  }
+}
