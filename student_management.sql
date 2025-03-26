@@ -246,10 +246,10 @@ CREATE TABLE `students` (
 --
 
 INSERT INTO `students` (`id`, `user_id`, `first_name`, `last_name`, `date_of_birth`, `gender`, `address`, `contact_number`, `parent_name`, `parent_contact`, `index_number`, `nic_number`, `ol_exam_year`, `preferred_stream_id`) VALUES
-(1, 7, 'Withanage', 'Withana', '2003-11-22', 'male', '6/8, Rohitha Weerakoon Mawatha, Katulanda, Dekatana\r\nRohitha Weerakon Mawatha, Katulanda, Dekatana', '0781347983', 'Priyanka', '0777511440', NULL, NULL, NULL, NULL),
+(1, 7, 'test1', 'test', '2003-11-22', 'male', 'asdasda', '654654654', '4554545', '45524524', NULL, NULL, NULL, NULL),
 (2, 10, 'Kavindu', 'Perera', '2004-02-03', 'male', 'Kavindu, 56/a, colombo', '7841235123', 'Mala', '012546984', NULL, NULL, NULL, NULL),
 (3, 13, 'Kevin', 'Jayarathna', '2000-06-06', 'male', '2/8, Colombo, Sri Lanka', '0777411441', 'Jayarathna', '0114452369', '2145236', '20001214536', '2019', 2),
-(4, 14, 'John', 'Doe', '2003-01-01', 'male', '6/8, Rohitha Weerakoon Mawatha, Katulanda, Dekatana\r\nRohitha Weerakon Mawatha, Katulanda, Dekatana', '0781347983', 'Priyanka', '0777511440', '12454852', '784153365', '2019', 2),
+(4, 14, 'John', 'Doe', '2003-01-01', 'male', 'asdasda', '56465464', 'Priyanka', '0777511440', '12454852', '784153365', '2019', 2),
 (5, 17, 'John', 'Doe', '2004-11-01', 'male', 'Test address', '01141254632', 'Test name', '0777411552', '321321321', '321123321123', '2000', 3),
 (6, 19, 'Jane', 'Smith', '1998-06-10', 'female', 'No. 511/23, Jane Street', '01141254632', 'Test name', '0777411552', '4545454', '321123321123', '2001', 4);
 
@@ -315,7 +315,7 @@ INSERT INTO `users` (`id`, `username`, `password`, `email`, `role`, `created_at`
 (3, 'mathhead', '$2a$12$jXEJ00JxEPl0l5LaDOP1mOd7H2YHN7WOBXIwGgHVxCNwegMxhX052', 'mathhead@school.edu', 'stream_head', '2025-03-25 12:54:19', 'active'),
 (4, 'comhead', '$2a$12$jXEJ00JxEPl0l5LaDOP1mOd7H2YHN7WOBXIwGgHVxCNwegMxhX052', 'comhead@school.edu', 'stream_head', '2025-03-25 12:54:19', 'active'),
 (5, 'artshead', '$2a$12$jXEJ00JxEPl0l5LaDOP1mOd7H2YHN7WOBXIwGgHVxCNwegMxhX052', 'artshead@school.edu', 'stream_head', '2025-03-25 12:54:19', 'active'),
-(7, 'randiltharusha', '$2y$10$nLjtOdGdBOTnqBvbdYMs/ePcj3Ge8ye1aGaHPVnMYASgwzJJJ8YUm', 'randiltharusha72@gmail.com', 'student', '2025-03-25 13:04:42', 'active'),
+(7, 'testuser1', '$2y$10$nLjtOdGdBOTnqBvbdYMs/ePcj3Ge8ye1aGaHPVnMYASgwzJJJ8YUm', 'randil@gmail.com', 'student', '2025-03-25 13:04:42', 'active'),
 (9, 'Admin2', '$2y$10$h9aXekxZ2VA8evCd2TPCseJ72OyYRG50bOpyDxp.5pa1cGltBiG0O', 'test@asd.com', 'administrator', '2025-03-25 15:43:26', 'active'),
 (10, 'Kavindu', '$2y$10$y8e2FLxLFWOIZ1mvk5Q/H.72CmNHavuxTbNHPLVJ2yK.3N.SB9do6', 'kavindu@gmail.com', 'student', '2025-03-25 16:21:57', 'active'),
 (11, 'techhead', '$2y$10$jCiIj7o2iynwMprQ9jEpPeiR2tUVo9BAbO1ohk3koMe3pCL1anYkq', 'techhead@gmail.com', 'stream_head', '2025-03-25 16:30:45', 'active'),
