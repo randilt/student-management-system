@@ -163,6 +163,16 @@ class Application {
 
       return $results;
   }
+  
+  // Get basket subjects for a student
+  public function getBasketSubjects($studentId) {
+      $this->db->query('SELECT * FROM basket_subjects WHERE student_id = :student_id');
+      $this->db->bind(':student_id', $studentId);
+
+      $results = $this->db->resultSet();
+
+      return $results;
+  }
 
   // Check if student has already applied to a stream
   public function hasAppliedToStream($studentId, $streamId) {

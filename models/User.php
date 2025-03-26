@@ -54,6 +54,19 @@ class User {
               $this->db->bind(':grade', $grade);
               $this->db->execute();
           }
+          
+          // Insert basket subjects
+          if(isset($data['basket_subjects'])) {
+              foreach($data['basket_subjects'] as $basketSubject) {
+                  if(!empty($basketSubject['name']) && !empty($basketSubject['grade'])) {
+                      $this->db->query('INSERT INTO basket_subjects (student_id, subject_name, grade) VALUES (:student_id, :subject_name, :grade)');
+                      $this->db->bind(':student_id', $studentId);
+                      $this->db->bind(':subject_name', $basketSubject['name']);
+                      $this->db->bind(':grade', $basketSubject['grade']);
+                      $this->db->execute();
+                  }
+              }
+          }
 
           // Commit transaction
           $this->db->endTransaction();
@@ -168,22 +181,22 @@ class User {
     } catch (Exception $e) {
         return false;
     }
-}
+  }
 
-// Add a new method to activate an administrator
-public function activateAdministrator($userId) {
-    try {
-        // Update user status to active
-        $this->db->query('UPDATE users SET account_status = :status WHERE id = :id AND role = :role');
-        $this->db->bind(':status', 'active');
-        $this->db->bind(':id', $userId);
-        $this->db->bind(':role', 'administrator');
-        
-        return $this->db->execute();
-    } catch (Exception $e) {
-        return false;
-    }
-}
+  // Method to activate an administrator
+  public function activateAdministrator($userId) {
+      try {
+          // Update user status to active
+          $this->db->query('UPDATE users SET account_status = :status WHERE id = :id AND role = :role');
+          $this->db->bind(':status', 'active');
+          $this->db->bind(':id', $userId);
+          $this->db->bind(':role', 'administrator');
+          
+          return $this->db->execute();
+      } catch (Exception $e) {
+          return false;
+      }
+  }
 
   // Login user
   public function login($username, $password) {

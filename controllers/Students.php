@@ -171,12 +171,17 @@ class Students {
         
         // Get O/L results
         $olResults = $this->applicationModel->getOLResults($student->id);
+        
+        // Get basket subjects
+        $basketSubjects = $this->applicationModel->getBasketSubjects($student->id);
 
         $data = [
             'student' => $student,
             'application' => $application,
             'selectedSubjects' => $selectedSubjects,
-            'olResults' => $olResults
+            'olResults' => $olResults,
+            'basketSubjects' => $basketSubjects,
+            'applicationModel' => $this->applicationModel
         ];
 
         require_once APP_ROOT . '/views/students/view_application.php';

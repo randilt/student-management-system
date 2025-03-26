@@ -90,7 +90,7 @@
                         </ul>
                     </div>
                     <div class="col-md-6">
-                        <h4>O/L Results</h4>
+                        <h4>O/L Main Subject Results</h4>
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -100,9 +100,47 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach($data['olResults'] as $result) : ?>
+                                    <?php 
+                                    $mainSubjects = ['Sinhala', 'Mathematics', 'Science', 'English', 'History', 'Religion'];
+                                    foreach($data['olResults'] as $result) : 
+                                        if(in_array($result->subject, $mainSubjects)) :
+                                    ?>
                                         <tr>
                                             <td><?php echo $result->subject; ?></td>
+                                            <td>
+                                                <span class="badge <?php echo ($result->grade == 'A' || $result->grade == 'B') ? 'badge-success' : (($result->grade == 'C' || $result->grade == 'S') ? 'badge-warning' : 'badge-danger'); ?>">
+                                                    <?php echo $result->grade; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <?php 
+                                        endif;
+                                    endforeach; 
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h4>O/L Basket Subject Results</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Grade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                    $basketSubjects = $this->applicationModel->getBasketSubjects($data['application']->student_id);
+                                    foreach($basketSubjects as $result) : 
+                                    ?>
+                                        <tr>
+                                            <td><?php echo $result->subject_name; ?></td>
                                             <td>
                                                 <span class="badge <?php echo ($result->grade == 'A' || $result->grade == 'B') ? 'badge-success' : (($result->grade == 'C' || $result->grade == 'S') ? 'badge-warning' : 'badge-danger'); ?>">
                                                     <?php echo $result->grade; ?>

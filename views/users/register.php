@@ -78,7 +78,6 @@
                             </div>
                             <div class="form-group">
                                 <label for="contact_number" class="form-label">Contact Number</label>
-                                <!-- <input type  class="form-label">Contact Number</label> -->
                                 <input type="text" name="contact_number" class="form-control <?php echo (!empty($data['contact_number_err'])) ? 'is-invalid' : ''; ?>" id="contact_number" value="<?php echo $data['contact_number']; ?>">
                                 <div class="invalid-feedback"><?php echo $data['contact_number_err']; ?></div>
                             </div>
@@ -153,6 +152,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <!-- Main Subjects -->
+                                        <tr>
+                                            <td>Sinhala</td>
+                                            <td>
+                                                <select name="ol_results[Sinhala]" class="form-select">
+                                                    <option value="" selected disabled>Select Grade</option>
+                                                    <option value="A">A</option>
+                                                    <option value="B">B</option>
+                                                    <option value="C">C</option>
+                                                    <option value="S">S</option>
+                                                    <option value="W">W</option>
+                                                    <option value="F">F</option>
+                                                </select>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td>Mathematics</td>
                                             <td>
@@ -196,20 +210,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Sinhala</td>
-                                            <td>
-                                                <select name="ol_results[Sinhala]" class="form-select">
-                                                    <option value="" selected disabled>Select Grade</option>
-                                                    <option value="A">A</option>
-                                                    <option value="B">B</option>
-                                                    <option value="C">C</option>
-                                                    <option value="S">S</option>
-                                                    <option value="W">W</option>
-                                                    <option value="F">F</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <td>History</td>
                                             <td>
                                                 <select name="ol_results[History]" class="form-select">
@@ -237,52 +237,58 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>ICT</td>
-                                            <td>
-                                                <select name="ol_results[ICT]" class="form-select">
-                                                    <option value="" selected disabled>Select Grade</option>
-                                                    <option value="A">A</option>
-                                                    <option value="B">B</option>
-                                                    <option value="C">C</option>
-                                                    <option value="S">S</option>
-                                                    <option value="W">W</option>
-                                                    <option value="F">F</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Commerce</td>
-                                            <td>
-                                                <select name="ol_results[Commerce]" class="form-select">
-                                                    <option value="" selected disabled>Select Grade</option>
-                                                    <option value="A">A</option>
-                                                    <option value="B">B</option>
-                                                    <option value="C">C</option>
-                                                    <option value="S">S</option>
-                                                    <option value="W">W</option>
-                                                    <option value="F">F</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Geography</td>
-                                            <td>
-                                                <select name="ol_results[Geography]" class="form-select">
-                                                    <option value="" selected disabled>Select Grade</option>
-                                                    <option value="A">A</option>
-                                                    <option value="B">B</option>
-                                                    <option value="C">C</option>
-                                                    <option value="S">S</option>
-                                                    <option value="W">W</option>
-                                                    <option value="F">F</option>
-                                                </select>
-                                            </td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div id="ol-results-error" class="d-none text-danger">Please select at least one subject grade</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Basket Subjects Section -->
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <h4>Basket Subjects</h4>
+                            <p class="text-muted">Please enter 3 basket subjects and grades</p>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Subject Name</th>
+                                            <th>Grade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php for($i = 1; $i <= 3; $i++) : ?>
+                                        <tr>
+                                            <td>
+                                                <input type="text" name="basket_subjects[<?php echo $i; ?>][name]" class="form-control <?php echo (!empty($data['basket_subjects_err'][$i]['name'])) ? 'is-invalid' : ''; ?>" placeholder="Basket Subject <?php echo $i; ?>" value="<?php echo isset($data['basket_subjects'][$i]['name']) ? $data['basket_subjects'][$i]['name'] : ''; ?>">
+                                                <?php if(!empty($data['basket_subjects_err'][$i]['name'])) : ?>
+                                                    <div class="invalid-feedback"><?php echo $data['basket_subjects_err'][$i]['name']; ?></div>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <select name="basket_subjects[<?php echo $i; ?>][grade]" class="form-select <?php echo (!empty($data['basket_subjects_err'][$i]['grade'])) ? 'is-invalid' : ''; ?>">
+                                                    <option value="" selected disabled>Select Grade</option>
+                                                    <option value="A" <?php echo (isset($data['basket_subjects'][$i]['grade']) && $data['basket_subjects'][$i]['grade'] == 'A') ? 'selected' : ''; ?>>A</option>
+                                                    <option value="B" <?php echo (isset($data['basket_subjects'][$i]['grade']) && $data['basket_subjects'][$i]['grade'] == 'B') ? 'selected' : ''; ?>>B</option>
+                                                    <option value="C" <?php echo (isset($data['basket_subjects'][$i]['grade']) && $data['basket_subjects'][$i]['grade'] == 'C') ? 'selected' : ''; ?>>C</option>
+                                                    <option value="S" <?php echo (isset($data['basket_subjects'][$i]['grade']) && $data['basket_subjects'][$i]['grade'] == 'S') ? 'selected' : ''; ?>>S</option>
+                                                    <option value="W" <?php echo (isset($data['basket_subjects'][$i]['grade']) && $data['basket_subjects'][$i]['grade'] == 'W') ? 'selected' : ''; ?>>W</option>
+                                                    <option value="F" <?php echo (isset($data['basket_subjects'][$i]['grade']) && $data['basket_subjects'][$i]['grade'] == 'F') ? 'selected' : ''; ?>>F</option>
+                                                </select>
+                                                <?php if(!empty($data['basket_subjects_err'][$i]['grade'])) : ?>
+                                                    <div class="invalid-feedback"><?php echo $data['basket_subjects_err'][$i]['grade']; ?></div>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <?php endfor; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <?php if(!empty($data['basket_subjects_err']['general'])) : ?>
+                                <div class="text-danger"><?php echo $data['basket_subjects_err']['general']; ?></div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     

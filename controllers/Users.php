@@ -37,6 +37,7 @@ class Users {
                 'ol_exam_year' => trim($_POST['ol_exam_year']),
                 'preferred_stream_id' => $_POST['preferred_stream_id'],
                 'ol_results' => $_POST['ol_results'],
+                'basket_subjects' => isset($_POST['basket_subjects']) ? $_POST['basket_subjects'] : [],
                 'username_err' => '',
                 'email_err' => '',
                 'password_err' => '',
@@ -54,6 +55,7 @@ class Users {
                 'ol_exam_year_err' => '',
                 'preferred_stream_id_err' => '',
                 'ol_results_err' => '',
+                'basket_subjects_err' => [],
                 'streams' => $streams
             ];
 
@@ -159,6 +161,31 @@ class Users {
             if(empty($data['ol_results'])) {
                 $data['ol_results_err'] = 'Please enter O/L results';
             }
+            
+            // Validate basket subjects
+            $basketSubjectsValid = true;
+            $basketSubjectsCount = 0;
+            
+            foreach($data['basket_subjects'] as $key => $basketSubject) {
+                if(!empty($basketSubject['name']) || !empty($basketSubject['grade'])) {
+                    $basketSubjectsCount++;
+                    
+                    if(empty($basketSubject['name'])) {
+                        $data['basket_subjects_err'][$key]['name'] = 'Please enter subject name';
+                        $basketSubjectsValid = false;
+                    }
+                    
+                    if(empty($basketSubject['grade'])) {
+                        $data['basket_subjects_err'][$key]['grade'] = 'Please select a grade';
+                        $basketSubjectsValid = false;
+                    }
+                }
+            }
+            
+            if($basketSubjectsCount < 3) {
+                $data['basket_subjects_err']['general'] = 'Please enter all 3 basket subjects';
+                $basketSubjectsValid = false;
+            }
 
             // Make sure errors are empty
             if(empty($data['username_err']) && empty($data['email_err']) && 
@@ -169,7 +196,7 @@ class Users {
                empty($data['parent_name_err']) && empty($data['parent_contact_err']) &&
                empty($data['index_number_err']) && empty($data['nic_number_err']) &&
                empty($data['ol_exam_year_err']) && empty($data['preferred_stream_id_err']) &&
-               empty($data['ol_results_err'])) {
+               empty($data['ol_results_err']) && $basketSubjectsValid) {
                 
                 // Register User
                 $studentId = $this->userModel->register($data);
@@ -206,6 +233,7 @@ class Users {
                 'ol_exam_year' => '',
                 'preferred_stream_id' => '',
                 'ol_results' => [],
+                'basket_subjects' => [],
                 'username_err' => '',
                 'email_err' => '',
                 'password_err' => '',
@@ -223,6 +251,7 @@ class Users {
                 'ol_exam_year_err' => '',
                 'preferred_stream_id_err' => '',
                 'ol_results_err' => '',
+                'basket_subjects_err' => [],
                 'streams' => $streams
             ];
 
@@ -246,10 +275,6 @@ class Users {
                 'password_err' => '',
                 'account_err' => '' 
             ];
-
-            // Validate Username
-            // if(empty($data  => '',      
-            // ];
 
             // Validate Username
             if(empty($data['username'])) {

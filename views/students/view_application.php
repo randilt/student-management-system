@@ -54,14 +54,10 @@
                         </ul>
                     </div>
                 </div>
-            
-                        </ul>
-                    </div>
-                </div>
                 
                 <div class="row">
-                    <div class="col-md-12">
-                        <h4>O/L Results</h4>
+                    <div class="col-md-6">
+                        <h4>O/L Main Subject Results</h4>
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -71,7 +67,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach($data['olResults'] as $result) : ?>
+                                    <?php 
+                                    $mainSubjects = ['Sinhala', 'Mathematics', 'Science', 'English', 'History', 'Religion'];
+                                    foreach($data['olResults'] as $result) : 
+                                        if(in_array($result->subject, $mainSubjects)) :
+                                    ?>
                                         <tr>
                                             <td><?php echo $result->subject; ?></td>
                                             <td>
@@ -80,7 +80,53 @@
                                                 </span>
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php 
+                                        endif;
+                                    endforeach; 
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h4>O/L Basket Subject Results</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Grade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php 
+                                    // Get the application model instance
+                                    require_once APP_ROOT . '/models/Application.php';
+                                    $applicationModel = new Application();
+                                    
+                                    // Get basket subjects for this student
+                                    $basketSubjects = $applicationModel->getBasketSubjects($data['student']->id);
+                                    
+                                    if(!empty($basketSubjects)) :
+                                        foreach($basketSubjects as $result) : 
+                                    ?>
+                                        <tr>
+                                            <td><?php echo $result->subject_name; ?></td>
+                                            <td>
+                                                <span class="badge <?php echo ($result->grade == 'A' || $result->grade == 'B') ? 'badge-success' : (($result->grade == 'C' || $result->grade == 'S') ? 'badge-warning' : 'badge-danger'); ?>">
+                                                    <?php echo $result->grade; ?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    <?php 
+                                        endforeach;
+                                    else:
+                                    ?>
+                                        <tr>
+                                            <td colspan="2" class="text-center">No basket subjects found</td>
+                                        </tr>
+                                    <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
